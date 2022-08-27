@@ -7,11 +7,11 @@ type Props = {
 };
 
 const ProtectedRoute = ({ children }: Props) => {
-  //   const { user } = useSelector((state: RootState) => state.auth);
-  //   if (!user || user.maLoaiNguoiDung !== "QuanTri") {
-  //     // if (!user) {
-  //     return <Navigate to={"/form/login"} />;
-  //   }
+  const { user } = useSelector((state: RootState) => state.auth);
+  // if (!user || user.maLoaiNguoiDung !== "QuanTri") {
+  if (!user) {
+    return <Navigate to={"/login"} />;
+  }
   return children;
 };
 

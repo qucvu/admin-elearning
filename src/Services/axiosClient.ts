@@ -10,12 +10,12 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use((config) => {
-  //   if (config.headers) {
-  //     const { accessToken = "" } = (store.getState().auth.user as any) || {};
-  //     if (accessToken) {
-  //       config.headers.Authorization = `Bearer ${accessToken}`;
-  //     }
-  //   }
+  if (config.headers) {
+    const { accessToken = "" } = (store.getState().auth.user as any) || {};
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+  }
   return config;
 });
 
@@ -23,8 +23,8 @@ axiosClient.interceptors.response.use(
   (response) => {
     return response.data;
   },
-  (error: AxiosError<{ content: string }>) => {
-    return Promise.reject(error.response?.data.content);
+  (error: AxiosError<{ message: string }>) => {
+    return Promise.reject(error.response?.data);
   }
 );
 
