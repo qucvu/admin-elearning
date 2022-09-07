@@ -1,5 +1,3 @@
-import {css} from "@emotion/react";
-
 import {
     Avatar,
     Button,
@@ -11,12 +9,11 @@ import {
     InputAdornment,
     IconButton,
     Alert,
-    CircularProgress,
     Link,
     Box,
 } from "@mui/material";
 
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {LoginValues} from "Interfaces/Login";
@@ -31,7 +28,7 @@ import {
 } from "_PlayGround/StyledComponents/FormLogin.styles";
 import Copyright from "Components/Copyright/Copyright";
 import {useDispatch, useSelector} from "react-redux";
-import {getUser} from "Slices/auth";
+import {getUser, logoutUser} from "Slices/auth";
 import SweetAlert2 from "react-sweetalert2";
 
 const schemaLogin = object({
@@ -47,6 +44,7 @@ export const handleMouseDownPassword = (
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loginSucess, setLoginSuccess] = useState(false);
+    const [modalError, setModalError] = useState(false)
     const {errorLogin, isLoading, user} = useSelector(
         (state: RootState) => state.auth
     );
@@ -63,22 +61,32 @@ const Login = () => {
     const onSuccess = async (values: LoginValues) => {
         try {
             await dispatch(getUser(values)).unwrap();
-            setLoginSuccess(true);
         } catch (error) {
             setLoginSuccess(false);
         }
     };
 
     const onError = (error: FieldErrors<LoginValues>) => {
-        console.log(error);
+        setLoginSuccess(false)
     };
+
 
     useEffect(() => {
         const isLoginSuccess = JSON.parse(
-            localStorage.getItem("isLoginSucess") as string
+            localStorage.getItem("isLoginSuccess") as string
         );
-        if (isLoginSuccess && user) navigate(-1);
-    }, []);
+        if (isLoginSuccess) navigate(-1);
+    }, [navigate]);
+
+    useEffect(() => {
+        const isLoginSuccess = JSON.parse(
+            localStorage.getItem("isLoginSuccess") as string
+        );
+        if (user && !isLoginSuccess) {
+            if (user?.maLoaiNguoiDung === "GV") setLoginSuccess(true)
+            else setModalError(true)
+        }
+    }, [user])
     return (
         <Container component="main" maxWidth="sm">
             <SweetAlert2
@@ -92,7 +100,22 @@ const Login = () => {
                 }}
                 didClose={() => {
                     navigate("/");
-                    localStorage.setItem("isLoginSucess", "true");
+                    localStorage.setItem("isLoginSuccess", 'true');
+                }}
+            />
+
+            <SweetAlert2
+                {...{
+                    show: modalError,
+                    position: "center",
+                    icon: "error",
+                    title: "Tài khoản học viên không có quyền thay đổi trên trang này!",
+                    showConfirmButton: true,
+                    timer: 3000,
+                }}
+                didClose={() => {
+                    dispatch(logoutUser());
+                    setModalError(false);
                 }}
             />
             <WrappedForm>
@@ -124,7 +147,6 @@ const Login = () => {
                             {errors.taiKhoan.message}
                         </Typography>
                     )}
-
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -186,6 +208,7 @@ const Login = () => {
                     >
                         ĐĂNG NHẬP
                     </Button>
+
                     <Link href="#" variant="body2" color="inherit">
                         Quên mật khẩu?
                     </Link>
