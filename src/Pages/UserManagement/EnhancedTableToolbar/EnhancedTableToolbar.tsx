@@ -24,8 +24,10 @@ type Props = { numSelected: number; selected: string[] };
 
 const EnhancedTableToolbar = ({ numSelected, selected }: Props) => {
   const [openSuccess, setOpenSuccess] = useState(false);
+
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+
   const { register, handleSubmit } = useForm({
     defaultValues: {
       searchText: "",
@@ -112,6 +114,7 @@ const EnhancedTableToolbar = ({ numSelected, selected }: Props) => {
             component="div"
           ></Typography>
         )}
+
         <Paper
           component="form"
           sx={{
@@ -135,6 +138,7 @@ const EnhancedTableToolbar = ({ numSelected, selected }: Props) => {
             <SearchIcon />
           </IconButton>
         </Paper>
+
         {numSelected > 0 ? (
           <Tooltip title="Delete">
             <IconButton

@@ -3,12 +3,12 @@ import {
   TableRow,
   TableCell,
   Checkbox,
-  Stack,
-  Button,
+  // Stack,
+  // Button,
 } from "@mui/material";
 import { MouseEvent } from "react";
 import { User } from "Interfaces/User";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -57,7 +57,7 @@ const EnhancedTableBody = (props: Props) => {
     handleClick,
   } = props;
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const isSelected = (name: string | number) =>
     selected.indexOf(name as string) !== -1;
@@ -114,7 +114,7 @@ const EnhancedTableBody = (props: Props) => {
               >
                 {row.maLoaiNguoiDung}
               </TableCell>
-              <TableCell align="center">
+              {/* <TableCell align="center">
                 <Stack>
                   <Button
                     variant="contained"
@@ -125,7 +125,7 @@ const EnhancedTableBody = (props: Props) => {
                     Chi tiết
                   </Button>
                 </Stack>
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           );
         })}

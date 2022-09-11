@@ -32,7 +32,6 @@ const EnhancedTableToolbar = ({ numSelected, selected }: Props) => {
     mode: "onSubmit",
   });
 
-  console.log(selected);
   useEffect(() => {
     dispatch(handleSearch(""));
     return () => {};
