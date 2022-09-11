@@ -11,34 +11,33 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { alpha } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "configStore";
-
-import { deleteUser, handleSearch } from "Slices/userSlice";
 import Swal from "sweetalert2";
 import SweetAlert2 from "react-sweetalert2";
 import { ChangeEvent, Fragment, useEffect, useRef, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { deleteCourse, handleSearch } from "Slices/courseSLice";
 
 type Props = { numSelected: number; selected: string[] };
 
 const EnhancedTableToolbar = ({ numSelected, selected }: Props) => {
   const [openSuccess, setOpenSuccess] = useState(false);
-
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
   const { register, handleSubmit } = useForm({
     defaultValues: {
       searchText: "",
     },
     mode: "onSubmit",
   });
+
   useEffect(() => {
     dispatch(handleSearch(""));
-
     return () => {};
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onSubmit = (values: any) => {
     dispatch(handleSearch(values.searchText));
   };
@@ -54,8 +53,8 @@ const EnhancedTableToolbar = ({ numSelected, selected }: Props) => {
       cancelButtonText: "Hủy bỏ",
     }).then((result) => {
       if (result.isConfirmed) {
-        selected.map((taiKhoan) =>
-          dispatch(deleteUser(taiKhoan)).then((res: any) => {
+        selected.map((maKhoaHoc) =>
+          dispatch(deleteCourse(maKhoaHoc)).then((res: any) => {
             if (res.error?.message) {
               Swal.fire(res.error?.message, "", "info");
             } else setOpenSuccess(true);
@@ -114,7 +113,6 @@ const EnhancedTableToolbar = ({ numSelected, selected }: Props) => {
             component="div"
           ></Typography>
         )}
-
         <Paper
           component="form"
           sx={{
@@ -127,7 +125,7 @@ const EnhancedTableToolbar = ({ numSelected, selected }: Props) => {
         >
           <InputBase
             sx={{ ml: 1, flex: 1 }}
-            placeholder="Tìm kiếm người dùng"
+            placeholder="Tìm kiếm khóa học"
             {...register("searchText", {
               onChange: (event: ChangeEvent<HTMLInputElement>) => {
                 handleSearchText(event);
@@ -138,7 +136,6 @@ const EnhancedTableToolbar = ({ numSelected, selected }: Props) => {
             <SearchIcon />
           </IconButton>
         </Paper>
-
         {numSelected > 0 ? (
           <Tooltip title="Delete">
             <IconButton
