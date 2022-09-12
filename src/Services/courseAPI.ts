@@ -24,7 +24,7 @@ const courseAPI = {
     });
   },
   deleteCourse: (maKhoaHoc: string) => {
-    return axiosClient.get(`QuanLyKhoaHoc/XoaKhoaHoc`, {
+    return axiosClient.delete(`QuanLyKhoaHoc/XoaKhoaHoc`, {
       params: {
         maKhoaHoc: maKhoaHoc,
       },
@@ -35,12 +35,17 @@ const courseAPI = {
       `QuanLyKhoaHoc/LayThongTinKhoaHoc?maKhoaHoc=${courseId}`
     );
   },
-  updateCourse: (payload: any) => {
+  updateCourse: (payload: [key: string]) => {
     const formData = new FormData();
+
     for (let key in payload) {
       formData.append(key, payload[key]);
     }
-    return axiosClient.post(`QuanLyKhoaHoc/CapNhatKhoaHocUpload`, formData);
+
+    return axiosClient.post<CourseUpdate>(
+      `QuanLyKhoaHoc/CapNhatKhoaHocUpload`,
+      formData
+    );
   },
 };
 

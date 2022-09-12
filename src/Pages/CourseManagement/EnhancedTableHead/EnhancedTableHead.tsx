@@ -54,12 +54,6 @@ const smHeadCells: readonly HeadCell[] = [
     disablePadding: false,
     label: "Danh mục khóa học",
   },
-  {
-    id: "nguoiTao",
-    numeric: true,
-    disablePadding: false,
-    label: "Người tạo",
-  },
 ];
 
 const mdHeadCells: readonly HeadCell[] = [

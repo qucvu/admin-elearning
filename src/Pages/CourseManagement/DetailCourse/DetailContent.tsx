@@ -1,6 +1,18 @@
-import { Box, Button, Grid, Stack, TextField, IconButton } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  Stack,
+  TextField,
+  IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+} from "@mui/material";
 import { AppDispatch, RootState } from "configStore";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useForm, FieldErrors } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { getSrcPreview, updateCourse } from "Slices/courseSLice";
@@ -10,19 +22,25 @@ import { SpanError } from "Pages/AddUser/AddUser";
 import SweetAlert2 from "react-sweetalert2";
 import { CourseUpdate } from "Interfaces/Course";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import dayjs from "dayjs";
 
-type Props = {};
-
-const DetailContent = (props: Props) => {
+const DetailContent = () => {
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [srcPreview, setSrcPreview] = useState("");
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
+  const [category, setCategory] = useState("");
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const { courseInfo } = useSelector((state: RootState) => state.course);
+  const handleChange = useCallback((event: SelectChangeEvent) => {
+    setCategory(event.target.value);
+  }, []);
+
+  const { courseInfo, categories } = useSelector(
+    (state: RootState) => state.course
+  );
 
   useEffect(() => {
     return () => {
@@ -37,27 +55,47 @@ const DetailContent = (props: Props) => {
   } = useForm({
     defaultValues: {
       maKhoaHoc: `${courseInfo?.maKhoaHoc}`,
-      tenKhoaHoc: `${courseInfo?.tenKhoaHoc}`,
       biDanh: `${courseInfo?.biDanh}`,
-      hinhAnh: `${courseInfo?.hinhAnh}`,
+      tenKhoaHoc: `${courseInfo?.tenKhoaHoc}`,
       moTa: `${courseInfo?.moTa}`,
       luotXem: courseInfo?.luotXem as number,
       danhGia: 0,
+      hinhAnh: `${courseInfo?.hinhAnh}`,
       maNhom: `${courseInfo?.maNhom}`,
       ngayTao: `${courseInfo?.ngayTao}`,
-      taiKhoanNguoiTao: `${courseInfo?.nguoiTao.taiKhoan}`,
       maDanhMucKhoaHoc: `${courseInfo?.danhMucKhoaHoc.maDanhMucKhoahoc}`,
+      taiKhoanNguoiTao: `${courseInfo?.nguoiTao.taiKhoan}`,
     },
     mode: "onTouched",
     resolver: yupResolver(schemaUpdateCourse),
   });
 
   const onSubmit = (values: CourseUpdate) => {
-    console.log(values);
     setOpenConfirm(false);
-    dispatch(updateCourse(values));
-    setOpenSuccess(true);
-    setIsReadOnly(true);
+    let payload;
+    srcPreview
+      ? (payload = {
+          ...values,
+          hinhAnh: values.hinhAnh[0],
+          ngayTao: dayjs(values.ngayTao).format("DD/MM/YYYY"),
+        })
+      : (payload = {
+          ...values,
+        });
+    console.log(payload);
+    dispatch(updateCourse(payload))
+      .then((res: any) => {
+        if (res.error?.message) {
+          setOpenError(true);
+        } else {
+          setOpenSuccess(true);
+          setIsReadOnly(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setOpenError(true);
+      });
   };
 
   const onError = (error: FieldErrors<CourseUpdate>) => {
@@ -246,7 +284,7 @@ const DetailContent = (props: Props) => {
               required
               {...register("taiKhoanNguoiTao")}
               InputProps={{
-                readOnly: isReadOnly,
+                readOnly: true,
               }}
             />
             {errors.taiKhoanNguoiTao && (
@@ -255,7 +293,43 @@ const DetailContent = (props: Props) => {
           </Grid>
 
           <Grid item xs={3}>
-            <TextField
+            <FormControl sx={{ width: "100%" }}>
+              <InputLabel id="category-select">Danh mục</InputLabel>
+              <Select
+                labelId="category-select"
+                id="category-select"
+                value={
+                  category === "" &&
+                  courseInfo?.danhMucKhoaHoc.maDanhMucKhoahoc &&
+                  categories.find(
+                    (category) =>
+                      category.maDanhMuc ===
+                      courseInfo?.danhMucKhoaHoc.maDanhMucKhoahoc
+                  )
+                    ? courseInfo?.danhMucKhoaHoc.maDanhMucKhoahoc
+                    : category
+                }
+                label="Category"
+                {...register("maDanhMucKhoaHoc", {
+                  onChange: (event: SelectChangeEvent) => {
+                    handleChange(event);
+                  },
+                })}
+              >
+                {categories.map((category) => {
+                  return (
+                    <MenuItem
+                      key={category.maDanhMuc}
+                      value={category.maDanhMuc}
+                    >
+                      {category.maDanhMuc}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+
+            {/* <TextField
               fullWidth
               id="maDanhMucKhoaHoc"
               label="Mã danh mục khóa học"
@@ -268,7 +342,7 @@ const DetailContent = (props: Props) => {
             />
             {errors.maDanhMucKhoaHoc && (
               <SpanError>{errors.maDanhMucKhoaHoc.message}</SpanError>
-            )}
+            )} */}
           </Grid>
 
           <Grid item xs={12}>

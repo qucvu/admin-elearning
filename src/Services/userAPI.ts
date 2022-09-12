@@ -17,7 +17,7 @@ const userAPI = {
   deleteUser: (userName: string) =>
     axiosClient.delete("QuanLyNguoiDung/XoaNguoiDung", {
       params: {
-        taiKhoan: userName,
+        TaiKhoan: userName,
       },
     }),
   updateUser: (values: UserRegister) =>

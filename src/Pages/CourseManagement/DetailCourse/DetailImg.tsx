@@ -8,6 +8,7 @@ const DetailImg = () => {
   const { courseInfo, srcPreview } = useSelector(
     (state: RootState) => state.course
   );
+
   return (
     <Box>
       {srcPreview ? (
