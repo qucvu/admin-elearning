@@ -1,4 +1,3 @@
-import { CourseUpdate } from "./../Interfaces/Course";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Category, Course } from "../Interfaces/Course";
 import courseAPI from "../Services/courseAPI";
@@ -100,7 +99,7 @@ export const getCourseInfo = createAsyncThunk(
 );
 
 export const updateCourse = createAsyncThunk(
-  "movie/updateCourse",
+  "course/updateCourse",
   async (payload: any) => {
     try {
       await courseAPI.updateCourse(payload);

@@ -86,6 +86,7 @@ const DetailContent = () => {
     dispatch(updateCourse(payload))
       .then((res: any) => {
         if (res.error?.message) {
+          console.log(res);
           setOpenError(true);
         } else {
           setOpenSuccess(true);

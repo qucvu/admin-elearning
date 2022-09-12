@@ -1,4 +1,3 @@
-import { CourseUpdate } from "./../Interfaces/Course";
 import { Category, Course } from "Interfaces/Course";
 import axiosClient from "./axiosClient";
 
@@ -42,10 +41,7 @@ const courseAPI = {
       formData.append(key, payload[key]);
     }
 
-    return axiosClient.post<CourseUpdate>(
-      `QuanLyKhoaHoc/CapNhatKhoaHocUpload`,
-      formData
-    );
+    return axiosClient.post(`QuanLyKhoaHoc/CapNhatKhoaHocUpload`, formData);
   },
 };
 
