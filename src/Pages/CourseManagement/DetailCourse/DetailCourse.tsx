@@ -2,10 +2,10 @@ import { Container, Grid } from "@mui/material";
 import LoadingLazy from "Components/LoadingLazy/LoadingLazy";
 import { AppDispatch, RootState } from "configStore";
 import { Title } from "Pages/AddCourse/AddCourse";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getCourseInfo } from "Slices/courseSLice";
+import { getCategories, getCourseInfo } from "Slices/courseSLice";
 import DetailContent from "./DetailContent";
 import DetailImg from "./DetailImg";
 
@@ -15,6 +15,13 @@ const DetailCourse = () => {
   const { courseInfo, isCourseInfoLoading } = useSelector(
     (state: RootState) => state.course
   );
+
+  useEffect(() => {
+    dispatch(getCategories());
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useLayoutEffect(() => {
     if (courseId) dispatch(getCourseInfo(courseId));
     return () => {};

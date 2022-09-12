@@ -81,7 +81,7 @@ const EnhancedTableToolbar = ({ numSelected, selected }: Props) => {
         icon="success"
         timer={2000}
         position="center"
-        didClose={() => navigate(-1)}
+        didClose={() => navigate(0)}
       />
       <Toolbar
         sx={{

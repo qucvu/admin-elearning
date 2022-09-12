@@ -54,12 +54,13 @@ export const addCourse = createAsyncThunk(
 );
 export const getCategories = createAsyncThunk(
   "course/getCategories",
-  async (values: string, { rejectWithValue }) => {
+  async (values?: string) => {
     try {
       const data = await courseAPI.getCategories(values);
       return data;
     } catch (e) {
-      return rejectWithValue(e);
+      throw e;
+      // return rejectWithValue(e);
     }
   }
 );
@@ -79,8 +80,7 @@ export const deleteCourse = createAsyncThunk(
   `course/deleteCourse`,
   async (payload: string) => {
     try {
-      const data = await courseAPI.deleteCourse(payload);
-      return data;
+      await courseAPI.deleteCourse(payload);
     } catch (error) {
       throw error;
     }
@@ -101,7 +101,7 @@ export const getCourseInfo = createAsyncThunk(
 
 export const updateCourse = createAsyncThunk(
   "movie/updateCourse",
-  async (payload: CourseUpdate) => {
+  async (payload: any) => {
     try {
       await courseAPI.updateCourse(payload);
     } catch (error) {

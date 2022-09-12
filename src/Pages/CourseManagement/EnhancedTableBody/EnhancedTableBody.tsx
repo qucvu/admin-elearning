@@ -96,13 +96,13 @@ const EnhancedTableBody = (props: Props) => {
               <TableCell align="right">{row.tenKhoaHoc}</TableCell>
               <TableCell
                 align="right"
-                sx={{ display: { xs: "none", md: "table-cell" } }}
+                sx={{ display: { xs: "none", sm: "table-cell" } }}
               >
                 {row.danhMucKhoaHoc.tenDanhMucKhoaHoc}
               </TableCell>
               <TableCell
                 align="right"
-                sx={{ display: { xs: "none", sm: "table-cell" } }}
+                sx={{ display: { xs: "none", md: "table-cell" } }}
               >
                 {row.nguoiTao.taiKhoan}
               </TableCell>
